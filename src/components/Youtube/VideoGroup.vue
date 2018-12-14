@@ -1,9 +1,29 @@
 <template>
     <div class="VideoGroup">
-        <md-field>
-            <label>Rechercher</label>
-            <md-input v-model="type"></md-input>
-        </md-field>
+        <form novalidate class="md-layout">
+            <md-card class="md-layout-item md-small-size-100">
+                <md-card-header>
+                    <div class="md-title">Paramètres de recherche :</div>
+                </md-card-header>
+                <div class="md-layout md-gutter">
+                    <div class="md-layout-item md-small-size-100">
+                        <md-field>
+                            <label for="rechercher">Mot clés</label>
+                            <md-input name="rechercher" id="rechercher" v-model="form.research" />
+                        </md-field>
+                    </div>
+                    <div class="md-layout-item md-small-size-100">
+                        <md-field>
+                            <label for="numberResearch">Nombre de réponse voulu</label>
+                            <md-input name="numberResearch" id="numberResearch" v-model="form.numberResearch"  />
+                        </md-field>
+                    </div>
+                </div>
+                <md-card-actions>
+                    <md-button type="submit" class="md-primary">Rechercher</md-button>
+                </md-card-actions>
+            </md-card>
+        </form>
         
         <div v-for="video in videos" 
                 :video="video"
@@ -44,26 +64,62 @@
 
 <script>
 import VideoItem from './VideoItem.vue'
+import { validationMixin } from 'vuelidate'
+  import {
+    required,
+    email,
+    minLength,
+    maxLength
+  } from 'vuelidate/lib/validators'
 
 export default {
     props: ['videos'],
-    data: () =>({
-        type: null
-    }),
-
     components : {
         VideoItem
+    },
+    data: () => ({
+      form: {
+        research: null,
+        numberResearch: null
+      }
+    }),
+    validations: {
+      form: {
+        research: {
+          required,
+          minLength: minLength(3)
+        },
+        numberResearch: {
+          required,
+          minLength: minLength(3)
+        }
+      }
+    },
+    methods: {      
+      clearForm () {
+        this.form.research = null
+        this.form.numberResearch = null
+      }     
     }
-}
+  }
 </script>
 
-<style>
 
-.md-card {
-  width: 500px;
-  margin: 4px;
-  display: inline-block;
-  vertical-align: top;
-}
+<style scoped>
+    .md-progress-bar 
+    {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+    }
 
+    .md-card 
+    {
+        width: 500px;
+        margin: 4px;
+        display: inline-block;
+        vertical-align: top;
+    }
 </style>
+
