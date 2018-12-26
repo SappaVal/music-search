@@ -1,6 +1,6 @@
 <template>
-    <div class="VideoGroup">
-        <form novalidate class="md-layout">
+    <div class="VideoGroup">   
+        <form class="md-layout" @submit.prevent="submitForm">
             <md-card class="md-layout-item md-small-size-100">
                 <md-card-header>
                     <div class="md-title">Paramètres de recherche :</div>
@@ -9,13 +9,13 @@
                     <div class="md-layout-item md-small-size-100">
                         <md-field>
                             <label for="rechercher">Mot clés</label>
-                            <md-input name="rechercher" id="rechercher" v-model="form.research" />
+                            <md-input name="rechercher" id="rechercher" v-model="research" />
                         </md-field>
                     </div>
                     <div class="md-layout-item md-small-size-100">
                         <md-field>
                             <label for="numberResearch">Nombre de réponse voulu</label>
-                            <md-input name="numberResearch" id="numberResearch" v-model="form.numberResearch"  />
+                            <md-input name="numberResearch" id="numberResearch" v-model="numberResearch"  />
                         </md-field>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
                 </md-card-actions>
             </md-card>
         </form>
-        
+
         <div v-for="video in videos" 
                 :video="video"
                 :key="video.id.videoId">
@@ -72,34 +72,29 @@ import { validationMixin } from 'vuelidate'
     maxLength
   } from 'vuelidate/lib/validators'
 
+import Axios from 'axios';
+import Search from "../../Search.js"
+
 export default {
     props: ['videos'],
     components : {
         VideoItem
     },
-    data: () => ({
-      form: {
-        research: null,
-        numberResearch: null
-      }
-    }),
-    validations: {
-      form: {
-        research: {
-          required,
-          minLength: minLength(3)
-        },
-        numberResearch: {
-          required,
-          minLength: minLength(3)
-        }
-      }
-    },
-    methods: {      
-      clearForm () {
-        this.form.research = null
-        this.form.numberResearch = null
+    data(){
+      return{
+        research: '',
+        numberResearch: ''
       }     
+    },
+    methods: {   
+        submitForm(){
+            Search({
+                apiKey : 'AIzaSyB4hZ11gKkQan9OLFGF9zxhYGrNBwW23jI', /* AIzaSyCPDd0aebOZ9-35yxEnZXDoUZE0I0nkfKo */
+                term : this.research,
+                items : this.numberResearch
+                }, response => this.videos = response
+            )
+        }  
     }
   }
 </script>
