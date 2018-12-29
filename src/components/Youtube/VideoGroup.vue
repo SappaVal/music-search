@@ -13,10 +13,12 @@
                         </md-field>
                     </div>
                     <div class="md-layout-item md-small-size-100">
-                        <md-field>
-                            <label for="numberResearch">Nombre de réponse voulu</label>
-                            <md-input name="numberResearch" id="numberResearch" v-model="numberResearch"  />
-                        </md-field>
+                        <div>
+                            <md-field>
+                                Nombres : 
+                                <input type="range" min="1" max="30" step="1" v-model.number="numberResearch" /> {{numberResearch}}
+                            </md-field>
+                        </div>
                     </div>
                 </div>
                 <md-card-actions>
@@ -40,21 +42,21 @@
                     </md-card-header>
 
                     <md-card-expand>
-                    <md-card-actions md-alignment="space-between">
-                        <div>
-                        <md-button>Ajouter</md-button>
-                        </div>
+                        <md-card-actions md-alignment="space-between">
+                            <div>
+                                <md-button>Ajouter</md-button>
+                            </div>
 
-                        <md-card-expand-trigger>
-                        <md-button>Description</md-button>
-                        </md-card-expand-trigger>
-                    </md-card-actions>
+                            <md-card-expand-trigger>
+                                <md-button>Description</md-button>
+                            </md-card-expand-trigger>
+                        </md-card-actions>
 
-                    <md-card-expand-content>
-                        <md-card-content>
-                            {{ video.snippet.description }}
-                        </md-card-content>
-                    </md-card-expand-content>
+                        <md-card-expand-content>
+                            <md-card-content>
+                                {{ video.snippet.description }}
+                            </md-card-content>
+                        </md-card-expand-content>
                     </md-card-expand>
                 </md-card>
             </div>
@@ -83,7 +85,7 @@ export default {
     data(){
       return{
         research: '',
-        numberResearch: ''
+        numberResearch: 5
       }     
     },
     methods: {   
@@ -115,6 +117,10 @@ export default {
         margin: 4px;
         display: inline-block;
         vertical-align: top;
+    }
+
+    .md-progress-bar{
+        margin: 24px;
     }
 </style>
 
