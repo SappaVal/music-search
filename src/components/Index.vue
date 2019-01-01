@@ -13,8 +13,8 @@ export default {
   created() {
     Search({
       apiKey : 'AIzaSyB4hZ11gKkQan9OLFGF9zxhYGrNBwW23jI', /* AIzaSyCPDd0aebOZ9-35yxEnZXDoUZE0I0nkfKo */
-      term : null,
-      items : 1
+      term : "music",
+      items : 5
     }, response => this.videos = response
   )},
   components: {
