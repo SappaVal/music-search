@@ -1,5 +1,10 @@
 <template>
     <div class="VideoGroup">   
+        <nav>
+            <router-link class="router-color" to="/accueil">Accueil</router-link>
+            <router-link class="router-color" to="/gestion">Gestionnaire de vidéos</router-link>
+            <md-button class="md-accent" v-on:click="logout">Deconnexion</md-button>
+        </nav>
         <form class="md-layout" @submit.prevent="submitForm">
             <md-card class="md-layout-item md-small-size-100">
                 <md-card-header>
@@ -65,14 +70,8 @@
 </template>
 
 <script>
+import firebase from 'firebase';
 import VideoItem from './VideoItem.vue'
-import { validationMixin } from 'vuelidate'
-  import {
-    required,
-    email,
-    minLength,
-    maxLength
-  } from 'vuelidate/lib/validators'
 
 import Axios from 'axios';
 import Search from "../../Search.js"
@@ -96,7 +95,13 @@ export default {
                 items : this.numberResearch
                 }, response => this.videos = response
             )
-        }  
+        },
+        logout: function() {
+            firebase.auth().signOut().then(() => {
+                this.$router.replace('login')
+                alert('Vous êtes maintenant déconnecté !')
+            });
+        }
     }
   }
 </script>
@@ -122,5 +127,15 @@ export default {
     .md-progress-bar{
         margin: 24px;
     }
+
+    .md-button{
+        margin-top: -8px;
+        vertical-align: center;
+    }
+
+    .router-color{
+        background-color: #EEEEEE;
+    }
+
 </style>
 

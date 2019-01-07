@@ -1,7 +1,7 @@
-let axios = require('axios');
+import { get } from 'axios';
 let BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
 
-module.exports = function(options, callback){
+export default function(options, callback){
     if(!options.apiKey)
     {
         throw new Error("Erreur : pas de clé API Youtube");
@@ -15,7 +15,7 @@ module.exports = function(options, callback){
         type : 'video'
     };
 
-    axios.get(BASE_URL, { params }).then(response => {
+    get(BASE_URL, { params }).then(response => {
         console.log('search response ', response);
         if(callback)
         {

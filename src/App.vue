@@ -1,21 +1,20 @@
+<!-- Template card --> 
 <template>
-  <div id="app">    
-    <nav>
-      <router-link to="/">Accueil</router-link>
-      <router-link to="/gestion">Gestionnaire de vidéos</router-link>
-    </nav>
+  <div id="app">
     <router-view />
   </div>
 </template>
 
 <script>
 import Index from './components/Index.vue'
+
 export default {
   name: 'app',
   components: {
     Index
   }
 }
+
 </script>
 
 <style>
@@ -26,7 +25,7 @@ body{
   display: grid;
   grid-template-rows: auto;
   justify-items: center;
-  padding-top: 50px;  
+  padding-top: 50px; 
 }
 
 
@@ -43,4 +42,5 @@ nav a {
   font-weight: bold;
   margin-right: 15px;
 }
+
 </style>

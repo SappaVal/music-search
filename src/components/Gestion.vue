@@ -1,5 +1,9 @@
 <template>
     <div class="gestion">
+      <nav>
+        <router-link to="/">Accueil</router-link>
+        <router-link to="/gestion">Gestionnaire de vidéos</router-link>
+      </nav>
         <h1>Gestionnaire de vidéos</h1>
         Mes playlists :         
         <ul id="example-2">

@@ -6,17 +6,14 @@
 
 <script>
 
+import * as firebase from 'firebase/app';
+import 'firebase/database';
 import VideoGroup from './Youtube/VideoGroup.vue'
 import Search from "../Search.js"
 
 export default {
-  created() {
-    Search({
-      apiKey : 'AIzaSyB4hZ11gKkQan9OLFGF9zxhYGrNBwW23jI', /* AIzaSyCPDd0aebOZ9-35yxEnZXDoUZE0I0nkfKo */
-      term : "music",
-      items : 5
-    }, response => this.videos = response
-  )},
+  name: 'accueil',
+  
   components: {
     VideoGroup
   },
@@ -24,9 +21,16 @@ export default {
     return{
       videos : null
     }
-   
-  },
+   },
+   created() {
+    Search({
+      apiKey : 'AIzaSyB4hZ11gKkQan9OLFGF9zxhYGrNBwW23jI', /* AIzaSyCPDd0aebOZ9-35yxEnZXDoUZE0I0nkfKo */
+      term : "music",
+      items : 5
+    }, response => this.videos = response
+  )},
   methods:{
+    
   }
 }
 </script>
