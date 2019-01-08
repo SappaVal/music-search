@@ -5,13 +5,12 @@
         <router-link to="/gestion">Gestionnaire de vidéos</router-link>
       </nav>
         <h1>Gestionnaire de vidéos</h1>
-        Mes playlists :         
-        <ul id="example-2">
-          <li v-for="(item, index) in playlists" :key="index.playlist">
-            <a href="#" v-on:click="openVideos(item.playlist.videos)">{{ item.playlist.nom }} - {{ Object.keys( item.playlist.videos ).length }} vidéo(s)</a>
-          </li>
-        </ul>
-
+        Mes playlists :       
+          <ul v-for="(item, index) in JSON.parse(JSON.stringify(this.playlists))" :key="index">
+            <li v-for="(item2, index2) in item" :key="index2">              
+              <a href="#" v-on:click="openVideos(item2.playlist.videos)">{{ item2.playlist.nom }} - {{ Object.keys( item2.playlist.videos ).length }} vidéo(s)</a>
+            </li>
+          </ul>        
         <div v-for="video in videosIds" 
                 :video="video"
                 :key="video">
@@ -36,42 +35,30 @@
                 </md-card>
             </div>
         </div>
-
     </div>
 </template>
 
 <script>
+import * as firebase from 'firebase/app';
+
 export default {
+  
   data(){
     return {
       videosIds : null,
-      playlists: [
-        { 
-          playlist: {
-            nom : 'Guitare', 
-            videos : 
-            [
-              'iltRZl04aKQ',
-              'MCJuySfxXPo',
-              'ERiBLduJZ3M'
-            ] 
-          }
-        },
-        { 
-          playlist: {
-            nom : 'Batterie', 
-            videos : 
-            [
-              '5LLyofyJYCk',
-              'qDfl78d26U4'
-            ] 
-          }
-        }
-      ]
+      playlists: null,
+      playlistObserver: null
     }
   },
+  created()
+  {
+    this.playlistObserver = firebase.database().ref().child('playlists');
+    this.playlistObserver.on('value', (snap) => {
+      this.playlists = snap.val();
+    });    
+  },
   methods:{
-    openVideos: function (videos) {
+    openVideos(videos) {
       this.videosIds = videos;
     }
   }
