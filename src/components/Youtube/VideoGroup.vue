@@ -42,16 +42,45 @@
                     </md-card-media>
 
                     <md-card-header>
-                    <div class="md-title">{{ video.snippet.title }}</div>
-                    <div class="md-subhead">{{ video.snippet.channelTitle }}</div>
+                        <div class="md-title">{{ video.snippet.title }}</div>
+                        <div class="md-subhead">{{ video.snippet.channelTitle }}</div>
                     </md-card-header>
 
                     <md-card-expand>
                         <md-card-actions md-alignment="space-between">
                             <div>
-                                <md-button>Ajouter</md-button>
-                            </div>
+                                <md-dialog :md-active.sync="showDialog">
+                                <md-dialog-title>Ajouter une video</md-dialog-title>
 
+                                <md-tabs md-dynamic-height>
+                                    <md-tab md-label="General">
+                                        <p>Pour ajouter une vidéo, veuillez choisir une playlist parmis celle créées</p>
+                                        <div class="md-layout-item">
+                                            <md-field>
+                                            <label for="SelectedPlaylist">Playlists disponible : </label>
+                                            <md-select v-model="SelectedPlaylist" name="SelectedPlaylist" id="SelectedPlaylist">
+                                                <md-option value="fight-club">Fight Club</md-option>
+                                                <md-option value="godfather">Godfather</md-option>
+                                                <md-option value="godfather-ii">Godfather II</md-option>
+                                                <md-option value="godfather-iii">Godfather III</md-option>
+                                                <md-option value="godfellas">Godfellas</md-option>
+                                                <md-option value="pulp-fiction">Pulp Fiction</md-option>
+                                                <md-option value="scarface">Scarface</md-option>
+                                            </md-select>
+                                            </md-field>
+                                        </div>
+                                    </md-tab>                                    
+                                </md-tabs>
+
+                                <md-dialog-actions>
+                                    <md-button class="md-primary" @click="cancelPopup()">Fermer</md-button>
+                                    <md-button class="md-primary" @click="addVideo(SelectedPlaylist)">Ajouter</md-button>
+                                </md-dialog-actions>
+                                </md-dialog>
+
+                                <md-button class="md-primary md-raised" @click="openPopup(video)">Ajouter</md-button>
+                        
+                            </div>                                                    
                             <md-card-expand-trigger>
                                 <md-button>Description</md-button>
                             </md-card-expand-trigger>
@@ -83,8 +112,11 @@ export default {
     },
     data(){
       return{
+        SelectedPlaylist: '',
         research: '',
-        numberResearch: 5
+        numberResearch: 5,
+        selectedVideo: null,
+        showDialog:false
       }     
     },
     methods: {   
@@ -95,6 +127,25 @@ export default {
                 items : this.numberResearch
                 }, response => this.videos = response
             )
+        },
+        openPopup : function(v){
+            this.showDialog = true;
+            this.selectedVideo =  JSON.parse(JSON.stringify(v));            
+        },  
+        addVideo: function(m){            
+            console.log("Fonction addVideo : ");
+            this.showDialog = false;
+            this.SelectedPlaylist = m;
+
+            console.log(this.SelectedPlaylist);
+            console.log(this.selectedVideo.id.videoId);
+            console.log(this.selectedVideo.snippet.title);
+            console.log(this.selectedVideo.snippet.channelTitle);
+            console.log(this.selectedVideo.snippet.description);
+        },
+        cancelPopup: function(){
+            this.SelectedPlaylist = '';
+            this.showDialog = false;
         },
         logout: function() {
             firebase.auth().signOut().then(() => {
