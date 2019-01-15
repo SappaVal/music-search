@@ -142,6 +142,13 @@ export default {
             console.log(this.selectedVideo.snippet.title);
             console.log(this.selectedVideo.snippet.channelTitle);
             console.log(this.selectedVideo.snippet.description);
+
+            firebase.database().ref('playlist').push().set({
+                nom: this.SelectedPlaylist,
+                videos: [
+                    this.selectedVideo.id.videoId
+                ]
+            });
         },
         cancelPopup: function(){
             this.SelectedPlaylist = '';

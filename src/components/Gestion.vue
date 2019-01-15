@@ -6,9 +6,9 @@
       </nav>
         <h1>Gestionnaire de vidéos</h1>
         Mes playlists :       
-          <ul v-for="(item, index) in JSON.parse(JSON.stringify(this.playlists))" :key="index">
-            <li v-for="(item2, index2) in item" :key="index2">              
-              <a href="#" v-on:click="openVideos(item2.playlist.videos)">{{ item2.playlist.nom }} - {{ Object.keys( item2.playlist.videos ).length }} vidéo(s)</a>
+          <ul>
+            <li v-for="(item, index) in JSON.parse(JSON.stringify(this.playlists))" :key="index">              
+              <a href="#" v-on:click="openVideos(item.videos)">{{ item.nom }} - {{ Object.keys( item.videos ).length }} vidéo(s)</a>
             </li>
           </ul>        
         <div v-for="video in videosIds" 
@@ -21,8 +21,8 @@
                     </md-card-media>
 
                     <md-card-header>
-                    <div class="md-title">{{ video }}</div>
-                    <div class="md-subhead">{{ video }}</div>
+                      <div class="md-title">{{ video }}</div>
+                      <div class="md-subhead">{{ video }}</div>
                     </md-card-header>
 
                     <md-card-expand>
@@ -52,7 +52,7 @@ export default {
   },
   created()
   {
-    this.playlistObserver = firebase.database().ref().child('playlists');
+    this.playlistObserver = firebase.database().ref().child('playlist');
     this.playlistObserver.on('value', (snap) => {
       this.playlists = snap.val();
     });    
