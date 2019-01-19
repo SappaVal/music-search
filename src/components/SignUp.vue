@@ -33,6 +33,7 @@
                 firebase.auth().createUserWithEmailAndPassword(this.email, this.mdp).then(
                     (user) => {
                         alert('Compte créé !')
+                        firebase.database().ref('utilisateurs/').set(firebase.auth().currentUser.uid);
                         this.$router.replace('accueil')
                     },
                     (err) => {

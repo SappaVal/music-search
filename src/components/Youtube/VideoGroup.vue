@@ -49,38 +49,8 @@
                     <md-card-expand>
                         <md-card-actions md-alignment="space-between">
                             <div>
-                                <md-dialog :md-active.sync="showDialog">
-                                <md-dialog-title>Ajouter une video</md-dialog-title>
-
-                                <md-tabs md-dynamic-height>
-                                    <md-tab md-label="General">
-                                        <p>Pour ajouter une vidéo, veuillez choisir une playlist parmis celle créées</p>
-                                        <div class="md-layout-item">
-                                            <md-field>
-                                            <label for="SelectedPlaylist">Playlists disponible : </label>
-                                            <md-select v-model="SelectedPlaylist" name="SelectedPlaylist" id="SelectedPlaylist">
-                                                <md-option value="fight-club">Fight Club</md-option>
-                                                <md-option value="godfather">Godfather</md-option>
-                                                <md-option value="godfather-ii">Godfather II</md-option>
-                                                <md-option value="godfather-iii">Godfather III</md-option>
-                                                <md-option value="godfellas">Godfellas</md-option>
-                                                <md-option value="pulp-fiction">Pulp Fiction</md-option>
-                                                <md-option value="scarface">Scarface</md-option>
-                                            </md-select>
-                                            </md-field>
-                                        </div>
-                                    </md-tab>                                    
-                                </md-tabs>
-
-                                <md-dialog-actions>
-                                    <md-button class="md-primary" @click="cancelPopup()">Fermer</md-button>
-                                    <md-button class="md-primary" @click="addVideo(SelectedPlaylist)">Ajouter</md-button>
-                                </md-dialog-actions>
-                                </md-dialog>
-
                                 <md-button class="md-primary md-raised" @click="openPopup(video)">Ajouter</md-button>
-                        
-                            </div>                                                    
+                            </div>                                          
                             <md-card-expand-trigger>
                                 <md-button>Description</md-button>
                             </md-card-expand-trigger>
@@ -94,6 +64,52 @@
                     </md-card-expand>
                 </md-card>
             </div>
+        </div>
+        <div>
+            <md-dialog :md-active.sync="showDialog">
+                <md-tabs md-dynamic-height>
+                    <md-tab md-label="General">
+                        <p>Pour ajouter une vidéo, veuillez choisir une playlist parmis celle créées</p>
+                        <div class="md-layout-item">
+                            <md-field>
+                            <label for="SelectedPlaylist">Playlists disponible : </label>
+                            <!-- Pour les playlists faut qu'ici on affiche les playlists utilisateurs existantes
+                                et qu'on ait accés a l'id de cette playlist // mettre un autre onglet dans le md-dialog 
+                                permettant de créer une nouvelle playlist //// 
+                                affichage utilisateur : le nom de la playlist / valeur que nous utilisons : id playlist créé par firebase -->
+                            <md-select v-model="SelectedPlaylist" name="SelectedPlaylist" id="SelectedPlaylist">
+                                <md-option value="fight-club">Fight Club</md-option>
+                                <md-option value="godfather">Godfather</md-option>
+                                <md-option value="godfather-ii">Godfather II</md-option>
+                                <md-option value="godfather-iii">Godfather III</md-option>
+                                <md-option value="godfellas">Godfellas</md-option>
+                                <md-option value="pulp-fiction">Pulp Fiction</md-option>
+                                <md-option value="scarface">Scarface</md-option>
+                            </md-select>
+                            </md-field>
+                        </div>
+                        <md-dialog-actions>
+                            <md-button class="md-primary" @click="cancelPopup()">Fermer</md-button>
+                            <md-button class="md-primary" @click="addVideo(SelectedPlaylist)">Ajouter</md-button>
+                        </md-dialog-actions>
+                    </md-tab>
+                    <md-tab md-label="Nouvelle playlist">
+                        <p>Ajout d'une nouvelle playlist</p>
+                        <md-field md-clearable>
+                            <label>Nom de la playlist</label>
+                            <md-input v-model="playlistName"></md-input>
+                        </md-field>
+                        <div class="md-layout-item">
+                            <md-dialog-actions>
+                                <md-button class="md-primary" @click="cancelPopup()">Fermer</md-button>
+                                <md-button class="md-primary" @click="createNewPlaylist()">Créer</md-button>
+                            </md-dialog-actions>
+                        </div>
+                    </md-tab>                                  
+                </md-tabs>
+                <md-dialog-alert :md-active.sync="created" md-content="Element correctement ajouté !" md-confirm-text="Au top!"/>
+                <md-dialog-alert :md-active.sync="failed" md-content="La requête a échoué :(" md-confirm-text="Pas cool..."/>
+            </md-dialog>
         </div>
     </div>
 </template>
@@ -116,10 +132,13 @@ export default {
         research: '',
         numberResearch: 5,
         selectedVideo: null,
-        showDialog:false
+        showDialog: false,
+        playlistName: '',
+        created: false,
+        failed: false
       }     
     },
-    methods: {   
+    methods: {
         submitForm(){
             Search({
                 apiKey : 'AIzaSyB4hZ11gKkQan9OLFGF9zxhYGrNBwW23jI', /* AIzaSyCPDd0aebOZ9-35yxEnZXDoUZE0I0nkfKo */
@@ -128,27 +147,38 @@ export default {
                 }, response => this.videos = response
             )
         },
-        openPopup : function(v){
+        openPopup : function(video){
             this.showDialog = true;
-            this.selectedVideo =  JSON.parse(JSON.stringify(v));            
+            this.selectedVideo = JSON.parse(JSON.stringify(video));
         },  
-        addVideo: function(m){            
-            console.log("Fonction addVideo : ");
+        addVideo: function(playlist){
             this.showDialog = false;
-            this.SelectedPlaylist = m;
+            this.SelectedPlaylist = playlist;
 
-            console.log(this.SelectedPlaylist);
-            console.log(this.selectedVideo.id.videoId);
-            console.log(this.selectedVideo.snippet.title);
-            console.log(this.selectedVideo.snippet.channelTitle);
-            console.log(this.selectedVideo.snippet.description);
-
-            firebase.database().ref('playlist').push().set({
-                nom: this.SelectedPlaylist,
-                videos: [
-                    this.selectedVideo.id.videoId
-                ]
-            });
+            // Quand on aura accès a l'id de la playlist, ajouté l'id dans le path de la ref (param de la fonction doit être l'id playlist)
+            // let playlistId = "-LWGq1vxWtolTn8kdLKB";
+            let playlistId = "-LWaN-5MKyOWJIjE71SO";
+            firebase.database().ref('utilisateurs/' + firebase.auth().currentUser.uid + '/playlists/' + playlistId + '/videos').push({
+                    id: this.selectedVideo.id.videoId,
+                    desc: this.selectedVideo.snippet.description,
+                    title: this.selectedVideo.snippet.title,
+                    channel: this.selectedVideo.snippet.channelTitle
+                }
+            );
+        },
+        createNewPlaylist: function(){
+            // Fonction qui crée une playlist en lui donnant juste un nom, ensuite il faut y accéder avec l'id pour lui ajouter des vidéos
+            firebase.database().ref('utilisateurs/' + firebase.auth().currentUser.uid + '/playlists').push({
+                    nom: this.playlistName
+                }
+            ).then(
+                (user) => {
+                    this.created = true;
+                },
+                (err) => {
+                    this.failed = true;
+                }
+            );
         },
         cancelPopup: function(){
             this.SelectedPlaylist = '';
