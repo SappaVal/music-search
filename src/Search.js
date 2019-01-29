@@ -10,7 +10,7 @@ export default function(options, callback){
     let params = {
         part : 'snippet',
         key : options.apiKey,
-        q: options.term,
+        q: options.term + " backing track",
         maxResults : (options.items) ? options.items : 5,
         type : 'video',
         videoCategoryId : 10

@@ -6,6 +6,8 @@ import Index from './components/Index.vue'
 import Gestion from './components/Gestion.vue'
 import Login from './components/Login.vue'
 import SignUp from './components/SignUp.vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(Router)
 
