@@ -10,7 +10,7 @@
             <li v-for="(item, index) in JSON.parse(JSON.stringify(this.playlists))" :key="index">              
               <a href="#" v-on:click="openVideos(item.videos.value.id)">{{ item.nom }} - {{ Object.keys( item.videos ).length }} vidéo(s)</a>
             </li>
-          </ul>        
+          </ul>
         <div v-for="video in videosIds" 
                 :video="video"
                 :key="video">
