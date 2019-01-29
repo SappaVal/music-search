@@ -12,7 +12,9 @@ export default function(options, callback){
         key : options.apiKey,
         q: options.term,
         maxResults : (options.items) ? options.items : 5,
-        type : 'video'
+        type : 'video',
+        videoCategoryId : 10
+
     };
 
     get(BASE_URL, { params }).then(response => {

@@ -7,7 +7,9 @@ import VueMaterial from 'vue-material';
 import VueYoutube from 'vue-youtube';
 import 'vue-material/dist/vue-material.css';
 import 'vue-material/dist/theme/default.css';
+import BootstrapVue from 'bootstrap-vue'
 
+Vue.use(BootstrapVue);
 Vue.use(VueMaterial);
 Vue.use(VueYoutube);
 
@@ -30,7 +32,7 @@ firebase.initializeApp(config);
 // reference à la db firebase
 //var database = firebase.database();
 //var userId = database.auth().currentUser.uid;
-//var firebaseRef = firebase.database().ref();
+//var firebaseRef = fi5rebase.database().ref();
 //firebaseRef.push().set("test value");
 
 /* basic add request */
