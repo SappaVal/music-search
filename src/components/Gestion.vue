@@ -3,11 +3,6 @@
       <nav>
         <router-link to="/">Accueil</router-link>
         <router-link to="/gestion">Gestionnaire de vidéos</router-link>
-        <div id="example-1">
-          <button v-on:click="greet()">Add 1</button>
-        </div>
-        <div id="example-1">
-        </div>
       </nav>
         <h1>Gestionnaire de vidéos</h1>
         Mes playlists :       
@@ -66,9 +61,6 @@ export default {
   methods:{
     openVideos(videos) {
       this.videosIds = videos;
-    },
-    greet: function (event) {
-      console.log(JSON.parse(JSON.stringify(this.existingPlaylists[0].childSnapshot["LXrjV0L13VSKKeWhJhc"])))
     }
   }
 }
