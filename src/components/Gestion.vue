@@ -4,13 +4,17 @@
         <router-link to="/">Accueil</router-link>
         <router-link to="/gestion">Gestionnaire de vidéos</router-link>
         <div id="example-1">
+          <button v-on:click="greet()">Add 1</button>
+        </div>
+        <div id="example-1">
         </div>
       </nav>
         <h1>Gestionnaire de vidéos</h1>
         Mes playlists :       
           <ul>
-            <li v-for="(item, index) in JSON.parse(JSON.stringify(this.existingPlaylists[0].childSnapshot))" :key="index">              
-              <a href="#" v-on:click="openVideos(item.videos)">{{ item.nom }} - {{ Object.keys( item.videos ).length }} vidéo(s)</a>
+            <li v-for="(item, index) in JSON.parse(JSON.stringify(this.existingPlaylists[0].childSnapshot))" :key="index">                 
+                <a v-if="item.videos" href="#" v-on:click="openVideos(item.videos)">{{ item.nom }} - {{ Object.keys( item.videos ).length }} vidéo(s)</a>                       
+                <span v-else href="#">{{ item.nom }} - Aucune vidéo disponible</span>                        
             </li>
           </ul>
           <b-container>
@@ -64,7 +68,7 @@ export default {
       this.videosIds = videos;
     },
     greet: function (event) {
-      console.log(JSON.parse(JSON.stringify(this.existingPlaylists[0].childSnapshot)))
+      console.log(JSON.parse(JSON.stringify(this.existingPlaylists[0].childSnapshot["LXrjV0L13VSKKeWhJhc"])))
     }
   }
 }
