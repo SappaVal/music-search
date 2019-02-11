@@ -27,21 +27,6 @@
                 </md-select>
               </md-field>
           </div>
-          <div class="md-layout-item md-small-size-100">
-            <div>
-              <md-field>
-                Nombres :
-                <input
-                  type="range"
-                  min="1"
-                  max="30"
-                  step="1"
-                  v-model.number="numberResearch"
-                >
-                {{numberResearch}}
-              </md-field>
-            </div>
-          </div>
         </div>
         <md-card-actions>
           <md-button class="md-accent" @click="saveRequest()">Sauvegarder la requête</md-button>
@@ -51,8 +36,8 @@
     </form>
 
     <b-container>
-      <b-row>
-        <b-col v-for="video in videos" :video="video" :key="video.id.videoId">
+      <b-row v-if="videos !== null">
+        <b-col v-for="video in videos.slice(paginateVideo,paginateVideo + 6)" :video="video" :key="video.id.videoId">
           <div class="card-expansion">
             <md-card>
               <md-card-media>
@@ -132,6 +117,18 @@
         />
       </md-dialog>
     </div>
+    <nav aria-label="...">
+      <ul class="pagination">        
+        <li v-if="paginateVideo === 0" class="page-item disabled">
+        <li v-else class="page-item">
+          <a class="page-link" v-on:click="forceRerender(-6)">Précédent</a>
+        </li>
+        <li v-if="paginateVideo === 42" class="page-item disabled">
+        <li v-else class="page-item">
+          <a class="page-link" v-on:click="forceRerender(6)">Suivant</a>
+        </li>
+      </ul>
+    </nav>
   </div>
 </template>
 
@@ -152,14 +149,14 @@ export default {
       SelectedPlaylist: "",
       SelectedRequest: "",
       research: "",
-      numberResearch: 5,
       selectedVideo: null,
       showDialog: false,
       playlistName: "",
       created: false,
       failed: false,
       existingPlaylists: [],
-      existingRequests: []
+      existingRequests: [],
+      paginateVideo : 0
     };
   },
   methods: {
@@ -265,6 +262,11 @@ export default {
           this.$router.replace("login");
           alert("Vous êtes maintenant déconnecté !");
         });
+    },
+    forceRerender : function(numberPage) {        
+      this.$nextTick(() => {
+        this.paginateVideo = this.paginateVideo + numberPage;
+      });
     },
     saveRequest: function() {
       // Fonction de sauvegarde de requête
