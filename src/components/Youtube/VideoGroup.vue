@@ -5,7 +5,7 @@
       <router-link class="router-color" to="/gestion">Gestionnaire de vidéos</router-link>
       <md-button class="md-accent" v-on:click="logout">Deconnexion</md-button>
     </nav>
-    <form class="md-layout" @submit.prevent="submitForm">
+    <form class="md-layout" @submit.prevent="submitForm()">
       <md-card class="md-layout-item md-small-size-100">
         <md-card-header>
           <div class="md-title">Paramètres de recherche :</div>
@@ -164,15 +164,28 @@ export default {
   },
   methods: {
     submitForm() {
-      Search(
+      if(this.research !== "") {
+        Search(
         {
           apiKey:
             "AIzaSyB4hZ11gKkQan9OLFGF9zxhYGrNBwW23jI" /* AIzaSyCPDd0aebOZ9-35yxEnZXDoUZE0I0nkfKo */,
           term: this.research,
           items: this.numberResearch
         },
-        response => (this.videos = response)
-      );
+          response => (this.videos = response)
+        );
+      } else if(this.SelectedRequest !== "") {
+        Search(
+        {
+          apiKey:
+            "AIzaSyB4hZ11gKkQan9OLFGF9zxhYGrNBwW23jI" /* AIzaSyCPDd0aebOZ9-35yxEnZXDoUZE0I0nkfKo */,
+          term: this.SelectedRequest,
+          items: this.numberResearch
+        },
+          response => (this.videos = response)
+        );
+      }
+      
     },
     openPopup: function(video) {
       this.showDialog = true;
@@ -268,12 +281,14 @@ export default {
     },
     saveRequest: function() {
       // Fonction de sauvegarde de requête
-      firebase
+      if(this.research !== null) {
+        firebase
         .database()
         .ref("utilisateurs/" + firebase.auth().currentUser.uid + "/requests")
         .push({
           request: this.research
         });
+      }
     }
   },
   created() {

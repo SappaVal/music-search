@@ -5,7 +5,7 @@
         <router-link to="/gestion">Gestionnaire de vidéos</router-link>
       </nav>
       <h1>Gestionnaire de vidéos</h1>
-      <ul v-if="this.existingPlaylists !== null">
+      <!--<ul v-if="this.existingPlaylists !== null">
         <li
           v-for="(item, index) in JSON.parse(JSON.stringify(this.existingPlaylists[0].childSnapshot))"
           :key="index"
@@ -17,16 +17,14 @@
           >{{ item.nom }} - {{ Object.keys( item.videos ).length }} vidéo(s)</a>
           <span v-else href="#">{{ item.nom }} - Aucune vidéo disponible</span>
         </li>
-      </ul>
-    <!--<div class="md-layout-item">
-      <md-field v-if="this.existingPlaylists !== null || this.existingPlaylists !== undefined">
+      </ul>-->
+    <div class="md-layout-item">
+      <md-field v-if="this.existingPlaylists !== null">
         <label for="SelectedPlay">Mes playlists</label>
-        <md-button @click="options()">test</md-button>
         <md-select v-model="SelectedPlay" name="SelectedPlay">
           <md-option
             v-for="(item, index) in JSON.parse(JSON.stringify(this.existingPlaylists[0].childSnapshot))"
-            :key="index"
-            @click="options()"
+            v-bind:key="index"
           >
             <span
               v-if="item.videos"
@@ -36,9 +34,9 @@
           </md-option>
         </md-select>
       </md-field>
-    </div>-->
+    </div>
     
-    <b-container>
+    <b-container v-if="videosIds !== null">
       <b-row>
         <b-col v-for="video in videosIds" :video="video" :key="video.id">
           <div class="card-expansion">
@@ -85,9 +83,6 @@ export default {
   methods: {
     openVideos(videos) {
       this.videosIds = videos;
-    },
-    options(){
-      console.log("length existinplay : " + JSON.stringify(this.existingPlaylists[0].childSnapshot));
     }
   }
 };
