@@ -25,7 +25,7 @@ body{
   display: grid;
   grid-template-rows: auto;
   justify-items: center;
-  padding-top: 50px; 
+  padding-top: 50px;
 }
 
 

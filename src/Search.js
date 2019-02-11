@@ -18,7 +18,6 @@ export default function(options, callback){
     };
 
     get(BASE_URL, { params }).then(response => {
-        console.log('search response ', response);
         if(callback)
         {
             callback(response.data.items)

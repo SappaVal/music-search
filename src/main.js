@@ -29,29 +29,7 @@ const config = {
 
 firebase.initializeApp(config);
 
-// reference à la db firebase
-//var database = firebase.database();
-//var userId = database.auth().currentUser.uid;
-//var firebaseRef = fi5rebase.database().ref();
-//firebaseRef.push().set("test value");
-
-/* basic add request */
-/*
-firebase.database().ref('playlist').push().set({
-  nom: "flute",
-  videos: [
-    "id vid 1",
-    "id vid 2"
-  ]
-});
-*/
-
-/* basic get request */
-/*
-const objParent = firebase.database().ref().child('playlist');
-objParent.on('value', snap => console.log(snap.val()));
-*/
-
+// Lorsqu'authentifier... affiche le contenu des pages
 firebase.auth().onAuthStateChanged(() => {
   if(!app) {
     app = new Vue({

@@ -16,6 +16,16 @@
               <label for="rechercher">Mot clés</label>
               <md-input name="rechercher" id="rechercher" v-model="research"/>
             </md-field>
+            <md-field>
+                <label for="SelectedRequest">Requête(s) disponible(s) :</label>
+                <md-select v-model="SelectedRequest" name="SelectedRequest" id="SelectedRequest">
+                  <md-option
+                    v-for="request in existingRequests"
+                    :key="request.value"
+                    v-bind:value="request.value"
+                  >{{ request.value }}</md-option>
+                </md-select>
+              </md-field>
           </div>
           <div class="md-layout-item md-small-size-100">
             <div>
@@ -34,6 +44,7 @@
           </div>
         </div>
         <md-card-actions>
+          <md-button class="md-accent" @click="saveRequest()">Sauvegarder la requête</md-button>
           <md-button type="submit" class="md-primary">Rechercher</md-button>
         </md-card-actions>
       </md-card>
@@ -139,6 +150,7 @@ export default {
   data() {
     return {
       SelectedPlaylist: "",
+      SelectedRequest: "",
       research: "",
       numberResearch: 5,
       selectedVideo: null,
@@ -146,7 +158,8 @@ export default {
       playlistName: "",
       created: false,
       failed: false,
-      existingPlaylists: []
+      existingPlaylists: [],
+      existingRequests: []
     };
   },
   methods: {
@@ -252,7 +265,29 @@ export default {
           this.$router.replace("login");
           alert("Vous êtes maintenant déconnecté !");
         });
+    },
+    saveRequest: function() {
+      // Fonction de sauvegarde de requête
+      firebase
+        .database()
+        .ref("utilisateurs/" + firebase.auth().currentUser.uid + "/requests")
+        .push({
+          request: this.research
+        });
     }
+  },
+  created() {
+    var query = firebase
+        .database()
+        .ref("utilisateurs/" + firebase.auth().currentUser.uid + "/requests")
+        .orderByKey();
+      query.once("value").then(snapshot => {
+        this.existingRequests = [];
+        snapshot.forEach(childSnapshot => {
+          var childData = childSnapshot.val();
+          this.existingRequests.push({ value: childData.request });
+        });
+      });
   }
 };
 </script>
