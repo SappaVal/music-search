@@ -36,8 +36,8 @@
     </form>
 
     <b-container>
-      <b-row v-if="videos !== null">
-        <b-col v-for="video in videos.slice(paginateVideo,paginateVideo + 6)" :video="video" :key="video.id.videoId">
+      <b-row v-if="mutableVideos !== null">
+        <b-col v-for="video in mutableVideos.slice(paginateVideo,paginateVideo + 6)" :video="video" :key="video.id.videoId">
           <div class="card-expansion">
             <md-card>
               <md-card-media>
@@ -75,6 +75,10 @@
           <md-tab md-label="General">
             <p>Pour ajouter une vidéo, veuillez choisir une playlist parmis celle créées</p>
             <div class="md-layout-item">
+              <md-field>
+                <label for="renommer">Renommer la vidéo</label>
+                <md-input name="renommer" id="renommer" v-model="newVideoName"/>
+              </md-field>
               <md-field>
                 <label for="SelectedPlaylist">Playlists disponible :</label>
                 <md-select v-model="SelectedPlaylist" name="SelectedPlaylist" id="SelectedPlaylist">
@@ -136,7 +140,6 @@
 import firebase from "firebase";
 import VideoItem from "./VideoItem.vue";
 
-import Axios from "axios";
 import Search from "../../Search.js";
 
 export default {
@@ -148,6 +151,7 @@ export default {
     return {
       SelectedPlaylist: "",
       SelectedRequest: "",
+      newVideoName: "",
       research: "",
       selectedVideo: null,
       showDialog: false,
@@ -156,7 +160,8 @@ export default {
       failed: false,
       existingPlaylists: [],
       existingRequests: [],
-      paginateVideo : 0
+      paginateVideo : 0,
+      mutableVideos: this.videos
     };
   },
   methods: {
@@ -169,7 +174,7 @@ export default {
           term: this.research,
           items: this.numberResearch
         },
-          response => (this.videos = response)
+          response => (this.mutableVideos = response)
         );
       } else if(this.SelectedRequest !== "") {
         Search(
@@ -179,7 +184,7 @@ export default {
           term: this.SelectedRequest,
           items: this.numberResearch
         },
-          response => (this.videos = response)
+          response => (this.mutableVideos = response)
         );
       }
       
@@ -204,7 +209,31 @@ export default {
       // Ajout d'une vidéo dans une playlist existante
       this.SelectedPlaylist = playlist;
 
-      if (this.SelectedPlaylist != "") {
+      if(this.newVideoName !== "" && this.SelectedPlaylist !== "") {
+        firebase
+          .database()
+          .ref(
+            "utilisateurs/" +
+              firebase.auth().currentUser.uid +
+              "/playlists/" +
+              this.SelectedPlaylist +
+              "/videos"
+          )
+          .push({
+            id: this.selectedVideo.id.videoId,
+            desc: this.selectedVideo.snippet.description,
+            title: this.newVideoName,
+            channel: this.selectedVideo.snippet.channelTitle
+          })
+          .then(
+            () => {
+              this.created = true;
+            },
+            () => {
+              this.failed = true;
+            }
+          );
+      } else if (this.SelectedPlaylist !== "") {
         firebase
           .database()
           .ref(
@@ -221,7 +250,7 @@ export default {
             channel: this.selectedVideo.snippet.channelTitle
           })
           .then(
-            user => {
+            () => {
               this.created = true;
             },
             () => {
@@ -241,7 +270,7 @@ export default {
           nom: this.playlistName
         })
         .then(
-          user => {
+          () => {
             var query = firebase
               .database()
               .ref(

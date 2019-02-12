@@ -19,18 +19,17 @@
         </li>
       </ul>-->
     <div class="md-layout-item">
-      <md-field v-if="this.existingPlaylists !== null">
+      <md-field v-if="this.existingPlaylists !== null && this.existingPlaylists !== undefined">
         <label for="SelectedPlay">Mes playlists</label>
         <md-select v-model="SelectedPlay" name="SelectedPlay">
           <md-option
             v-for="(item, index) in JSON.parse(JSON.stringify(this.existingPlaylists[0].childSnapshot))"
             v-bind:key="index"
-          >
+          >&nbsp;
             <span
-              v-if="item.videos"
+              v-if="item.videos !== undefined && item.videos !== null"
               @click="openVideos(item.videos)"
             >{{ item.nom }} - {{ Object.keys( item.videos ).length }} vidéo(s)</span>
-            <span v-else>{{ item.nom }} - Aucune vidéo disponible</span>
           </md-option>
         </md-select>
       </md-field>
