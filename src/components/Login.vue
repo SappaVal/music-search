@@ -32,10 +32,10 @@
             login: function() {
                 firebase.auth().signInWithEmailAndPassword(this.email, this.mdp).then(
                     (user) => {
-                        this.$router.replace('accueil')
+                        this.$router.replace('accueil');
                     },
                     (err) => {
-                        alert('Dommage... ' + err.message)
+                        alert('Dommage... ' + err.message);
                     }
                 );
             }

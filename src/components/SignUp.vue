@@ -32,12 +32,11 @@
             signUp: function() {
                 firebase.auth().createUserWithEmailAndPassword(this.email, this.mdp).then(
                     (user) => {
-                        alert('Compte créé !')
-                        firebase.database().ref('utilisateurs/').set(firebase.auth().currentUser.uid);
-                        this.$router.replace('accueil')
+                        alert('Compte créé !');
+                        this.$router.replace('accueil');
                     },
                     (err) => {
-                        alert('Essaye encore ... ' + err.message)
+                        alert('Essaye encore ... ' + err.message);
                     }
                 );
             }
